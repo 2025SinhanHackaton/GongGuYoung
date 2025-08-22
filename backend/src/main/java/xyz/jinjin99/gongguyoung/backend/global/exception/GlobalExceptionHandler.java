@@ -1,4 +1,4 @@
-package xyz.jinjin99.gongguyoung.backend.global.utils;
+package xyz.jinjin99.gongguyoung.backend.global.exception;
 
 
 import lombok.AllArgsConstructor;
@@ -31,5 +31,12 @@ public class GlobalExceptionHandler {
     }
 
 
+    @ExceptionHandler(MemberAlreadyExistsException.class)
+    public ResponseEntity<ErrorResponse> handleAlreadyExistsException(MemberAlreadyExistsException exception){
+
+        ErrorResponse errorResponse = new ErrorResponse(HttpStatus.BAD_REQUEST.value(), "이미 존재하는 ID 입니다" );
+        return ResponseEntity.badRequest()
+                .body(errorResponse);
+    }
 
 }

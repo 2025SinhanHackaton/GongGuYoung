@@ -103,12 +103,12 @@ class DemandDepositWorkflowTest {
     private CreateDemandDepositResponse createTestProduct(String bankCode, String productName) {
         try {
             CreateDemandDepositRequest request = CreateDemandDepositRequest.builder()
-                .header(createHeaderWithoutUserKey("createDemandDeposit"))
-                .bankCode(bankCode)
-                .accountName(productName)
-                .accountDescription("테스트용 수시입출금 상품 - " + productName)
-                .build();
-                
+                    .header(createHeaderWithoutUserKey("createDemandDeposit"))
+                    .bankCode(bankCode)
+                    .accountName(productName)
+                    .accountDescription("테스트용 수시입출금 상품 - " + productName)
+                    .build();
+
             CreateDemandDepositResponse response = demandDepositClient.createDemandDeposit(request);
             log.info("테스트 상품 생성 완료: {}", response);
             return response;
@@ -117,7 +117,7 @@ class DemandDepositWorkflowTest {
             throw new RuntimeException("상품 생성 실패: " + e.getMessage(), e);
         }
     }
-    
+
     /**
      * 테스트용 계좌 생성 헬퍼
      */
@@ -345,7 +345,8 @@ class DemandDepositWorkflowTest {
                 
             InquireDemandDepositAccountListResponse response = 
                 demandDepositClient.inquireDemandDepositAccountList(request);
-            
+
+            log.info("계좌 목록 조회  : {}", response);
             assertNotNull(response, "계좌 목록 조회 응답이 null이면 안됩니다");
             assertNotNull(response.getHeader(), "응답 헤더가 null이면 안됩니다");
             

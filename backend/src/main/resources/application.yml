@@ -23,3 +23,11 @@ fin-open:
 
 image:
   path: classpath:static/images/
+
+
+account:
+  starter:
+    type-unique-no: 088-1-a4827963282942
+  flex:
+    type-unique-no: 088-1-982fe078d3464b
+

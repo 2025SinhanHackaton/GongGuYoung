@@ -27,7 +27,8 @@ public class MemberClientImpl implements MemberClient {
         .orElseGet(() -> createMember(userId));
   }
 
-  private MemberRecord createMember(String userId) {
+  @Override
+  public MemberRecord createMember(String userId) {
     String endPoint = "/member";
       log.debug("회원 생성: {}", userId);
     return finOpenApiRestClient.post()
@@ -38,7 +39,8 @@ public class MemberClientImpl implements MemberClient {
         .body(MemberRecord.class);
   }
 
-  private MemberRecord searchMember(String userId) {
+  @Override
+  public MemberRecord searchMember(String userId) {
     String endPoint = "/member/search";
 
     try {
@@ -50,6 +52,7 @@ public class MemberClientImpl implements MemberClient {
           .body(MemberRecord.class);
 
     } catch (Exception e) {
+      log.info("회원 조회 실패");
       log.debug("회원 조회 실패: {}", userId);
       return null;
     }

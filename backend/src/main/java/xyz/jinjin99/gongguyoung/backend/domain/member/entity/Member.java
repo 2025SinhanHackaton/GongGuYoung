@@ -32,8 +32,17 @@ public class Member {
 
     @OneToOne(mappedBy = "member", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private BnplLimit bnplLimit;
+
+    // 입출금 계좌
+    @Column(nullable = true)
+    private String starterAccountNo;
+
+    // BNPL 계좌
+    @Column(nullable = true)
+    private String flexAccountNo;
     
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
     private List<KeywordAlert> keywordAlerts = new ArrayList<>();
     
     public Member(String name, String email) {
