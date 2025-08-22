@@ -1,41 +1,63 @@
-
-
-import { useState, useMemo } from "react"
-import { AuthGuard } from "@/components/auth/auth-guard"
-import { useAuth } from "@/lib/auth-context"
-import { Button } from "@/components/ui/button"
-import { CampaignCard } from "@/components/dashboard/campaign-card"
-import { CampaignFilters } from "@/components/dashboard/campaign-filters"
-import { NotificationBell } from "@/components/notifications/notification-bell"
-import { mockCampaigns } from "@/lib/mock-data"
-import { Link } from 'react-router-dom'
-import Image from '@/compat/NextImage'
-import { Plus, Users, ShoppingCart, TrendingUp, User } from "lucide-react"
+import { useState, useMemo } from "react";
+import { AuthGuard } from "@/components/auth/auth-guard";
+import { useAuth } from "@/lib/auth-context";
+import { Button } from "@/components/ui/button";
+import { CampaignCard } from "@/components/dashboard/campaign-card";
+import { CampaignFilters } from "@/components/dashboard/campaign-filters";
+import { NotificationBell } from "@/components/notifications/notification-bell";
+import { mockCampaigns } from "@/lib/mock-data";
+import { Link } from "react-router-dom";
+import Image from "@/compat/NextImage";
+import { Plus, Users, ShoppingCart, TrendingUp, User } from "lucide-react";
 
 export default function DashboardPage() {
-  const { user, logout } = useAuth()
+  const { user, logout } = useAuth();
   const [filters, setFilters] = useState({
     category: "전체",
     search: "",
     status: "all",
-  })
+  });
 
   const filteredCampaigns = useMemo(() => {
-    return mockCampaigns.filter((campaign) => {
-      const matchesSearch =
-        campaign.title.toLowerCase().includes(filters.search.toLowerCase()) ||
-        campaign.product.name.toLowerCase().includes(filters.search.toLowerCase())
-      const matchesStatus = filters.status === "all" || campaign.status === filters.status
+    const now = Date.now();
+    const endOfDay = (dateStr: string) => {
+      // "YYYY-MM-DD"를 하루의 끝(23:59:59.999)으로 맞춰서 비교
+      const d = new Date(dateStr);
+      d.setHours(23, 59, 59, 999);
+      return d.getTime();
+    };
 
-      return matchesSearch && matchesStatus
-    })
-  }, [filters])
+    return mockCampaigns
+      .filter((c) => c.status !== "cancelled") // 취소는 항상 제외
+      .filter((campaign) => {
+        const matchesSearch =
+          campaign.title.toLowerCase().includes(filters.search.toLowerCase()) ||
+          campaign.product.name
+            .toLowerCase()
+            .includes(filters.search.toLowerCase());
+
+        // 현재 시간 기준 파생 상태
+        const isActive = now <= endOfDay(campaign.endDate);
+        const derivedStatus = isActive ? "active" : "completed";
+
+        const matchesStatus =
+          filters.status === "all" ||
+          (filters.status === "active" && derivedStatus === "active") ||
+          (filters.status === "completed" && derivedStatus === "completed");
+
+        return matchesSearch && matchesStatus;
+      });
+  }, [filters]);
 
   const stats = {
     activeCampaigns: mockCampaigns.filter((c) => c.status === "active").length,
-    totalParticipants: mockCampaigns.reduce((sum, c) => sum + c.participants, 0),
-    completedCampaigns: mockCampaigns.filter((c) => c.status === "completed").length,
-  }
+    totalParticipants: mockCampaigns.reduce(
+      (sum, c) => sum + c.participants,
+      0
+    ),
+    completedCampaigns: mockCampaigns.filter((c) => c.status === "completed")
+      .length,
+  };
 
   return (
     <AuthGuard>
@@ -52,8 +74,12 @@ export default function DashboardPage() {
                   className="rounded-xl bg-white/20 p-2"
                 />
                 <div>
-                  <h1 className="text-2xl font-bold text-white">공동구매 플랫폼</h1>
-                  <p className="text-purple-100">안녕하세요, {user?.fullName}님!</p>
+                  <h1 className="text-2xl font-bold text-white">
+                    공동구매 플랫폼
+                  </h1>
+                  <p className="text-purple-100">
+                    안녕하세요, {user?.fullName}님!
+                  </p>
                 </div>
               </div>
               <div className="flex gap-3 items-center">
@@ -70,7 +96,11 @@ export default function DashboardPage() {
                     공구 만들기
                   </Button>
                 </Link>
-                <Button variant="ghost" onClick={logout} className="text-white hover:bg-white/20">
+                <Button
+                  variant="ghost"
+                  onClick={logout}
+                  className="text-white hover:bg-white/20"
+                >
                   로그아웃
                 </Button>
               </div>
@@ -79,14 +109,14 @@ export default function DashboardPage() {
         </header>
 
         <div className="container mx-auto px-4 py-8">
-
-
           {/* Filters */}
           <CampaignFilters onFilterChange={setFilters} />
 
           {/* Campaign Grid */}
           <div className="mt-8">
-            <h2 className="text-xl font-semibold mb-6 text-purple-800">공동구매 목록 ({filteredCampaigns.length}개)</h2>
+            <h2 className="text-xl font-semibold mb-6 text-purple-800">
+              공동구매 목록 ({filteredCampaigns.length}개)
+            </h2>
 
             {filteredCampaigns.length > 0 ? (
               <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -96,9 +126,13 @@ export default function DashboardPage() {
               </div>
             ) : (
               <div className="text-center py-12">
-                <p className="text-gray-500 text-lg">조건에 맞는 공동구매가 없습니다.</p>
+                <p className="text-gray-500 text-lg">
+                  조건에 맞는 공동구매가 없습니다.
+                </p>
                 <Link to="/create-campaign">
-                  <Button className="mt-4 bg-hey-gradient hover:opacity-90 text-white">새 공구 만들기</Button>
+                  <Button className="mt-4 bg-hey-gradient hover:opacity-90 text-white">
+                    새 공구 만들기
+                  </Button>
                 </Link>
               </div>
             )}
@@ -106,5 +140,5 @@ export default function DashboardPage() {
         </div>
       </div>
     </AuthGuard>
-  )
+  );
 }

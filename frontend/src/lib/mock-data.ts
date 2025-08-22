@@ -70,7 +70,7 @@ export const mockCampaigns: GroupCampaign[] = [
     currentQuantity: 15,
     discountPrice: 75000,
     startDate: "2024-01-15",
-    endDate: "2024-01-25",
+    endDate: "2026-01-25",
     status: "active",
     university: "연세대학교",
     createdBy: "김학생",
