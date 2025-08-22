@@ -4,6 +4,7 @@ import type React from "react"
 
 import { useState } from "react"
 import { useAuth } from "@/lib/auth-context"
+import { useNavigate } from "react-router-dom"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
@@ -19,6 +20,7 @@ export function RegisterForm() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState("")
   const { register } = useAuth()
+  const navigate = useNavigate()
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -37,6 +39,9 @@ export function RegisterForm() {
         password: formData.password,
         name: formData.name,
       })
+      
+      // 회원가입 성공 시 로그인 페이지로 이동
+      navigate('/auth/login')
     } catch (err) {
       setError(err instanceof Error ? err.message : "회원가입에 실패했습니다.")
     } finally {

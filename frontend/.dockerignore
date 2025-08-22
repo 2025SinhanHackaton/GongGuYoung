@@ -50,7 +50,6 @@ README.md
 # Docker files
 Dockerfile
 .dockerignore
-nginx.docker.conf
 
 # TypeScript
 *.tsbuildinfo

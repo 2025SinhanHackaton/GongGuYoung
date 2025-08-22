@@ -1,7 +1,7 @@
 "use client"
 
 import type React from "react"
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react"
 import { useAuth } from "@/lib/auth-context"
 import { Button } from "@/components/ui/button"
@@ -15,6 +15,7 @@ export function LoginForm() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState("")
   const { login } = useAuth()
+  const navigate = useNavigate()
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -23,6 +24,8 @@ export function LoginForm() {
 
     try {
       await login(email, password)
+      // 로그인 성공 시 메인 페이지로 이동
+      navigate('/')
     } catch (err) {
       setError(err instanceof Error ? err.message : "로그인에 실패했습니다.")
     } finally {
