@@ -295,7 +295,7 @@ export default function CampaignDetailPage() {
                     {/* Enhanced Price Card */}
                     <Card className="border-0 shadow-xl bg-gradient-to-br from-white via-purple-50 to-pink-50">
                       <CardHeader className="text-center pb-4">
-                        <div className="inline-flex items-center gap-2 bg-hey-gradient text-white px-4 py-2 rounded-full text-sm font-medium">
+                        <div className="inline-flex items-center gap-2 bg-hey-gradient text-white px-4 py-2 rounded-full text-sm font-bold">
                           <TrendingDown className="w-4 h-4" />
                           특가 혜택
                         </div>
@@ -308,7 +308,7 @@ export default function CampaignDetailPage() {
                           <div className="text-3xl font-bold text-purple-600">
                             {campaign.discountPrice.toLocaleString()}원
                           </div>
-                          <Badge variant="destructive" className="bg-red-500">
+                          <Badge variant="destructive" className="bg-red-500 font-bold">
                             {discountPercentage}% 할인
                           </Badge>
                         </div>
@@ -344,7 +344,7 @@ export default function CampaignDetailPage() {
                                     max="5"
                                     value={quantity}
                                     onChange={(e) => setQuantity(Math.max(1, Number.parseInt(e.target.value) || 1))}
-                                    className="text-center"
+                                    className="text-center appearance-none"
                                   />
                                   <Button
                                     variant="outline"
